@@ -10,16 +10,16 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// En algunas ocasiones las rutas necesitan estar en un order particular para que trabajen adecuadamente
 Route::get('/', function () {
     return view('welcome');
 });
 
 Auth::routes();
 
-Route::get('/p/{post}', 'PostsController@show');
 Route::get('/p/create', 'PostsController@create');
 Route::post('/p', 'PostsController@store');
+Route::get('/p/{post}', 'PostsController@show');
 
 
 Route::get('/profile/{user}', 'ProfileController@index')->name('profile.show');
