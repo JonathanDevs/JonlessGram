@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class ProfileController extends Controller
 {
@@ -28,8 +29,20 @@ class ProfileController extends Controller
             'url' =>'url',
             'image' =>'',
         ]);
-            // Un forma de sencilla de darle autoridad al usuario
-            auth()->$user->profile->update($data);
+            if(request('image')){
+                $imagePath = request('image')->store('profile', 'public');
+                
+                $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000); 
+                $image->save();
+                $imageArray = ['image'=> $imagePath];
+            
+        }
+       
+        // Un forma de sencilla de darle autoridad al usuario
+        auth()->user()->profile->update(array_merge(
+            $data,
+            $imageArray ?? []
+        ));
 
             return redirect("/profile/{$user->id}");
     }
